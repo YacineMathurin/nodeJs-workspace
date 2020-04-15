@@ -12,7 +12,7 @@ module.exports = function () {
   // mongoose.connect("mongodb://localhost/playground").then(() => {
   mongoose
     .connect(
-      "mongodb+srv://playgroundUser:<password>@cluster0-hmqfg.mongodb.net/test?retryWrites=true&w=majority"
+      "mongodb+srv://playgroundUser:12345@cluster0-hmqfg.mongodb.net/test?retryWrites=true&w=majority"
       // "mongodb://localhost/playground"
     )
     .then(() => {
