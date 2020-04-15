@@ -13,6 +13,7 @@ module.exports = function () {
   mongoose
     .connect(
       "mongodb+srv://playgroundUser:<password>@cluster0-hmqfg.mongodb.net/test?retryWrites=true&w=majority"
+      // "mongodb://localhost/playground"
     )
     .then(() => {
       console.log("Connected ...");
