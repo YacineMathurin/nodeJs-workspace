@@ -9,8 +9,13 @@ module.exports = function () {
     process.exit(1);
   }
   // Returns a promise
-  mongoose.connect("mongodb://localhost/playground").then(() => {
-    console.log("Connected ...");
-    winston.info("Connected to database ...");
-  });
+  // mongoose.connect("mongodb://localhost/playground").then(() => {
+  mongoose
+    .connect(
+      "mongodb+srv://playgroundUser:12345@cluster0-hmqfg.mongodb.net/test"
+    )
+    .then(() => {
+      console.log("Connected ...");
+      winston.info("Connected to database ...");
+    });
 };
