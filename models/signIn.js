@@ -9,4 +9,4 @@ function validateUser(user) {
   return Joi.validate(user, schema);
 }
 
-exports.validate = validateUser;
+exports.validateLogin = validateUser;

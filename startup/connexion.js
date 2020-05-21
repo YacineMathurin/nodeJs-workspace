@@ -12,8 +12,8 @@ module.exports = function () {
   // mongoose.connect("mongodb://localhost/playground").then(() => {
   mongoose
     .connect(
-      "mongodb+srv://playgroundUser:12345@cluster0-hmqfg.mongodb.net/test?retryWrites=true&w=majority"
-      // "mongodb://localhost/playground"
+      // "mongodb+srv://admin:CloudData1@cluster0-pjomp.mongodb.net/test?retryWrites=true&w=majority"
+      "mongodb://localhost/playground"
     )
     .then(() => {
       console.log("Connected ...");
