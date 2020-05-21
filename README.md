@@ -1,6 +1,5 @@
 # nodeJs-workspace
 ### Preview
-![](images/winston.png)
 ![](images/NodeJs.gif)
 
 ### Usage
