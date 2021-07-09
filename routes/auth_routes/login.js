@@ -1,11 +1,11 @@
-const { User } = require("../models/user");
-const { validateLogin } = require("../models/signIn");
+const { User } = require("../../models/user");
+const { validateLogin } = require("../../models/signIn");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
-const auth = require("../middlewares/auth");
-const asyncMiddleware = require("../middlewares/asyncMiddleware");
+const auth = require("../../middlewares/auth");
+const asyncMiddleware = require("../../middlewares/asyncMiddleware");
 
 router.get("/me", auth, async (req, res) => {
   console.log(User.user);
@@ -15,6 +15,7 @@ router.post("/logout", auth, async (req, res) => {
   res.header("x-auth-token", "").send("You're now logged out, See you then !");
 });
 // Second argument is optional and stands for middlewares to protect route
+// Did you guys mean axios.get('url', {headers: {"x-dsi-restful":1}})
 // router.post("/", auth, async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   // throw Error("access denied");

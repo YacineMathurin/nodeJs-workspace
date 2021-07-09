@@ -32,7 +32,7 @@ userSchema.methods.generateAuthToken = function () {
     config.get("jwtPrivateKey")
   );
 };
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("auths", userSchema);
 
 function validateUser(user) {
   const schema = {
@@ -42,6 +42,14 @@ function validateUser(user) {
   };
   return Joi.validate(user, schema);
 }
+function validateForgotPassword(reqBody) {
+  const schema = {
+    userId: Joi.string().required(),
+    newPassword: Joi.string().required().min(5).max(255),
+  };
+  return Joi.validate(reqBody, schema);
+}
 
 exports.User = User;
 exports.validateSignUp = validateUser;
+exports.validateForgotPassword = validateForgotPassword;

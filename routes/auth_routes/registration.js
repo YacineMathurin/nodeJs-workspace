@@ -1,4 +1,4 @@
-const { User, validateSignUp } = require("../models/user");
+const { User, validateSignUp } = require("../../models/user");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");

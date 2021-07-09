@@ -1,9 +1,12 @@
 const express = require("express");
+var cors = require("cors");
 const app = express();
 const winston = require("winston");
+app.use(cors()); // Use this after the variable declaration
 
 require("./startup/logging")();
-require("./startup/startup_routes")(app);
+require("./services/server/authService")(app);
+require("./services/server/permissionService")(app);
 require("./startup/connexion")();
 require("./startup/prod")(app);
 

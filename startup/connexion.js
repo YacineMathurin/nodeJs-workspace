@@ -13,7 +13,7 @@ module.exports = function () {
   mongoose
     .connect(
       // "mongodb+srv://admin:CloudData1@cluster0-pjomp.mongodb.net/test?retryWrites=true&w=majority"
-      "mongodb://localhost/playground"
+      "mongodb://localhost/blachere"
     )
     .then(() => {
       console.log("Connected ...");
