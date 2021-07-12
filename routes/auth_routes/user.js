@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
+const jwt_decode = require('jwt-decode');
+
 
 const auth = require("../../middlewares/auth");
 const { validateForgotPassword, User } = require("../../models/user");
@@ -23,43 +25,38 @@ router.post("/isauthenticated", auth, async (req, res) => {
 });
 router.post("/forgotpassword", async (req, res) => {
   const { body } = req;
+  console.log("body", body);
   const { newPassword, userId } = body;
   const { error } = validateForgotPassword(body);
   if (error) return res.send({ status: 400, res: error.details[0].message });
 
-  let user = await User.findOne({ _id: userId });
+  let user = await User.findOne({ localId: userId });
   if (!user) return res.send({ res: "Not registred email !", status: 404 });
   // User is known
+  console.log("Known user", user);
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(newPassword, salt, async function (err, hash) {
       if (err) return res.send({ res: "Oups ...", status: 400 });
       // Store hash in your password DB.
       console.log("hash: ", hash);
-      user.password = hash;
+      user.passwordHash = hash;
       await user.save();
     });
   });
   res.status(200).json({ res: "", message: "Password edited !" });
 });
-router.post("/all", async (req, res) => {
-  console.log("req", req);
-  const allUsers = await listUsers.find().limit(20);
-  // console.log(allUsers);
-  var newArray = [];
-  allUsers.forEach((user) => {
-    console.log("user", user);
-    console.log("user picked", user["_data"]);
+router.post("/allShopUsers", async (req, res) => {
+  // const shopToken = req.header("x-shop-token");
+  //   var decoded = jwt_decode(shopToken);
+  //   console.log('shopToken', shopToken);
+  // console.log(decoded);
 
-    newArray.push(user["_data"]);
-  });
+  // const allUsers = await listUsers.find().limit(20);
+  const allUsers = await listUsers.find({ shopId: "1933" });
+
   res
     .status(200)
-    // .header("Access-Control-Allow-Origin", "*")
-    .header({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-    })
-    .json({ res: newArray, message: "All users !" });
+    .json({ res: allUsers, message: "All users !" });
 });
 router.post("/getprofile", async (req, res) => {
   const { body } = req;
@@ -68,7 +65,6 @@ router.post("/getprofile", async (req, res) => {
 
   res
     .status(200)
-    .header("Access-Control-Allow-Origin", "*")
     .json({ res: profile, message: "user's profile !" });
 });
 router.post("/shopuserprofile ", async (req, res) => {
@@ -86,7 +82,6 @@ router.post("/shopuserprofile ", async (req, res) => {
   });
   res
     .status(200)
-    .header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
     .json({ res: newArray, message: "All users !" });
 });
 

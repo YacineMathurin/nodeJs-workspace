@@ -4,12 +4,6 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 50,
-  },
   email: {
     type: String,
     required: true,
@@ -17,13 +11,36 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     unique: true,
   },
-  password: {
+  passwordHash: {
     type: String,
     required: true,
     minlength: 5,
     maxlength: 1024,
   },
-  isAdmin: Boolean,
+  displayName: {
+    type: String,
+    required: true,
+  },
+  localId: {
+    type: String,
+    required: true,
+  },
+  emailVerified: {
+    type: Boolean,
+    required: true,
+  },
+  salt: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: String,
+    required: true,
+  },
+  disabled: {
+    type: Boolean,
+    required: true,
+  },
 });
 userSchema.methods.generateAuthToken = function () {
   // We're dealing with classes here, so this works fine !

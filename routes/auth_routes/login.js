@@ -20,6 +20,8 @@ router.post("/logout", auth, async (req, res) => {
 router.post("/", async (req, res, next) => {
   // throw Error("access denied");
   // Validate request
+  console.log(req.body);
+
   const { error } = validateLogin(req.body);
   if (error) return res.status(400).send("Email or Password is wrong !");
   // Check if already existing
@@ -27,8 +29,9 @@ router.post("/", async (req, res, next) => {
     console.log(err);
   });
   if (!user) return res.status(400).send("Not registred !");
+  console.log("All good !", user);
   //   Good to Signin check
-  const isValidUser = await bcrypt.compare(req.body.password, user.password);
+  const isValidUser = await bcrypt.compare(req.body.password, user.passwordHash);
   if (!isValidUser)
     return res
       .status(400)
