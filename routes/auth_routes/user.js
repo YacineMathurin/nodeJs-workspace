@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
-const jwt_decode = require('jwt-decode');
+
 
 
 const auth = require("../../middlewares/auth");
 const { validateForgotPassword, User } = require("../../models/user");
 const { listUsers } = require("../../models/listAllUsers");
+
+
+
 router.post("/gettoken", auth, async (req, res) => {
   const token = req.header("x-auth-token");
   res.status(200).json({
@@ -69,17 +72,40 @@ router.post("/getprofile", async (req, res) => {
 });
 router.post("/update", async (req, res) => {
   const { body } = req;
-  const { id, user: param } = body;
+  const { id, user: update } = body;
   var response = "";
   var user = "";
   const filter = { id };
-  const update = { $set: { lastname: "Yacine" } };
 
-  response = await listUsers.replaceOne(filter, param);
-  console.log("Res", response);
-  res
-    .status(200)
-    .json({ user, res: response, message: "user updated !" });
+  try {
+    response = await listUsers.replaceOne(filter, update);
+    console.log("Res", response);
+    res
+      .status(200)
+      .json({ user, res: response, message: "user updated !" });
+  } catch (error) {
+    console.error(error);
+  }
+
+});
+router.post("/delete", async (req, res) => {
+  const { body } = req;
+  const { id } = body;
+  var response = "";
+  const userFilter = { id };
+  const authFilter = { localId: id };
+
+  try {
+    const { acknowledged } = await listUsers.deleteOne(userFilter);
+    if (acknowledged) {
+      response = await User.deleteOne(authFilter);
+    }
+    res
+      .status(200)
+      .json({ res: response, message: "user updated !" });
+  } catch (error) {
+    console.error(error);
+  }
 
 });
 
