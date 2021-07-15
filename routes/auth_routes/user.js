@@ -67,22 +67,20 @@ router.post("/getprofile", async (req, res) => {
     .status(200)
     .json({ res: profile, message: "user's profile !" });
 });
-router.post("/shopuserprofile ", async (req, res) => {
+router.post("/update", async (req, res) => {
   const { body } = req;
-  const { userId, shopId } = body;
+  const { id, user: param } = body;
+  var response = "";
+  var user = "";
+  const filter = { id };
+  const update = { $set: { lastname: "Yacine" } };
 
-  const user = await listUsers.findOne({ id: userId });
-  // console.log(allUsers);
-  var newArray = [];
-  allUsers.forEach((user) => {
-    console.log("user", user);
-    console.log("user picked", user["_data"]);
-
-    newArray.push(user["_data"]);
-  });
+  response = await listUsers.replaceOne(filter, param);
+  console.log("Res", response);
   res
     .status(200)
-    .json({ res: newArray, message: "All users !" });
+    .json({ user, res: response, message: "user updated !" });
+
 });
 
 module.exports = router;
