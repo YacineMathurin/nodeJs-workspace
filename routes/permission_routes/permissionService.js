@@ -3,7 +3,7 @@ const router = express.Router();
 const { RolePermissions } = require("../../models/permissions");
 
 router.post("/", async (req, res) => {
-  var map = {};
+  var map = [];
   const data = await RolePermissions.find();
   //   console.log("data", data);
   data.forEach((doc, index) => {

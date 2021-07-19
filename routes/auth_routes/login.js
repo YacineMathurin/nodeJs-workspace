@@ -20,12 +20,13 @@ router.post("/logout", auth, async (req, res) => {
 router.post("/", async (req, res, next) => {
   // throw Error("access denied");
   // Validate request
-  console.log(req.body);
+  // console.log(req.body);
+  const { email, password } = req.body;
 
   const { error } = validateLogin(req.body);
   if (error) return res.status(400).send("Email or Password is wrong !");
   // Check if already existing
-  let user = await User.findOne({ email: req.body.email }).catch((err) => {
+  let user = await User.findOne({ email: email.toLowerCase() }).catch((err) => {
     console.log(err);
   });
   if (!user) return res.status(400).send("Not registred !");

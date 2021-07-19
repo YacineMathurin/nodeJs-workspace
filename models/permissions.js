@@ -2,9 +2,12 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const RolePermissions = mongoose.model(
-  "rolePermissions",
+  "permissions_packeds",
   new mongoose.Schema({
-    data: {},
+    _id: {
+      type: String
+    },
+    _data: {},
   })
 );
 exports.RolePermissions = RolePermissions;

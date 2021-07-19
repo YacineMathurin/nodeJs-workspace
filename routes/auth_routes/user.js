@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
-
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 
 const auth = require("../../middlewares/auth");
@@ -18,12 +19,25 @@ router.post("/gettoken", auth, async (req, res) => {
     message: "Have the user's token !",
   });
 });
-router.post("/isauthenticated", auth, async (req, res) => {
-  console.log(req.user);
+router.post("/isauthenticated", async (req, res) => {
+  const token = req.header("x-auth-token");
+
+  var user = false;
+  console.log("Token", token);
+
+  if (token) {
+    console.log("FIRED !");
+    const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
+    console.log("decoded jwt: ", decoded);
+    try {
+      user = await listUsers.find({ id: decoded.id });
+      console.log("user", user);
+    } catch (error) {
+      throw error
+    }
+  }
   res.status(200).json({
-    res: true,
-    uid: req.user._id,
-    message: "User is authenticated !",
+    user,
   });
 });
 router.post("/forgotpassword", async (req, res) => {
@@ -54,12 +68,17 @@ router.post("/allShopUsers", async (req, res) => {
   //   console.log('shopToken', shopToken);
   // console.log(decoded);
 
-  // const allUsers = await listUsers.find().limit(20);
-  const allUsers = await listUsers.find({ shopId: "1933" });
+  // const allUsers = await listUsers.find().limit(20)
+  try {
+    const allUsers = await listUsers.find({ shopId: "1933" });
 
-  res
-    .status(200)
-    .json({ res: allUsers, message: "All users !" });
+    res
+      .status(200)
+      .json({ res: allUsers, message: "All users !" });
+  } catch (error) {
+    throw error
+  }
+
 });
 router.post("/getprofile", async (req, res) => {
   const { body } = req;
@@ -73,12 +92,13 @@ router.post("/getprofile", async (req, res) => {
 router.post("/update", async (req, res) => {
   const { body } = req;
   const { id, user: update } = body;
+
   var response = "";
   var user = "";
   const filter = { id };
 
   try {
-    response = await listUsers.replaceOne(filter, update);
+    response = await listUsers.updateOne(filter, { $set: { role: update.role } });
     console.log("Res", response);
     res
       .status(200)

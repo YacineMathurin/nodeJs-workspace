@@ -45,7 +45,8 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateAuthToken = function () {
   // We're dealing with classes here, so this works fine !
   return jwt.sign(
-    { _id: this._id, isAdmin: this.isAdmin },
+    // { _id: this._id, isAdmin: this.isAdmin },
+    { id: this.localId, user_id: this.localId, name: this.displayName, email: this.email },
     config.get("jwtPrivateKey")
   );
 };

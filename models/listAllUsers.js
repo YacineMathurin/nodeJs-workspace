@@ -31,6 +31,10 @@ const listUsers = mongoose.model(
       type: String,
       required: true,
     },
+    _id: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       // required: true,
