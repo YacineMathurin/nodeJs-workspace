@@ -33,7 +33,7 @@ const listUsers = mongoose.model(
     },
     _id: {
       type: String,
-      required: true,
+      // required: true,
     },
     status: {
       type: String,

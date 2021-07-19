@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const { uuid } = require('uuidv4');
 
 
 const auth = require("../../middlewares/auth");
@@ -128,5 +129,52 @@ router.post("/delete", async (req, res) => {
   }
 
 });
+router.post("/create", async (req, res) => {
+  const { body } = req;
+  const { user: requestedUser, password: passwordHash, shopId } = body;
+  const { firstname, lastname, role, status } = requestedUser;
+  // const email = `${}@marieblachere.fr`;
+  const email = `yacinemathurin@gmail.com`;
+  const userInfo = { firstname, lastname, role, email, passwordHash, shopId };
+  const displayName = `${firstname} ${lastname}`;
+  const emailVerified = false;
+  const disabled = false;
+  var createdAt = "";
+  const localId = uuid();
+
+  // const { error } = validateSignUp(userInfo);
+  // if (error) return res.status(400).send(error.details[0].message);
+  let user = {};
+  let auth = await User.findOne({ email });
+  if (auth) return res.status(400).send("User already registred !");
+
+  // Need User for auth collection
+  // Need listUsers for users collection
+
+  // Sign up to auth then Add to users collection
+  try {
+    const salt = await bcrypt.genSalt(10);
+    auth = new User({ displayName, role, email, disabled, passwordHash, localId, shopId, emailVerified, salt, createdAt });
+    auth.passwordHash = await bcrypt.hash(passwordHash, salt);
+    auth.salt = salt;
+    auth.createdAt = Date.now();
+
+    const signupResult = await auth.save();
+    console.log("signupResult", signupResult);
+
+    if (signupResult.createdAt) {
+      user = new listUsers({ email, firstname, lastname, role, id: localId, shopId, _id: localId });
+      user = await user.save();
+    }
+    res
+      .status(201)
+      .json({ authResponse: { displayName, role, email, localId, shopId }, user });
+
+  } catch (error) {
+    throw error;
+  }
+
+});
+
 
 module.exports = router;
