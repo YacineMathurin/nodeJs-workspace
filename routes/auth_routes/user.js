@@ -8,7 +8,7 @@ const { uuid } = require('uuidv4');
 
 
 const auth = require("../../middlewares/auth");
-const { validateForgotPassword, User } = require("../../models/user");
+const { validateForgotPassword, validateCreate, User } = require("../../models/user");
 const { listUsers } = require("../../models/listAllUsers");
 
 
@@ -90,51 +90,12 @@ router.post("/getprofile", async (req, res) => {
     .status(200)
     .json({ res: profile, message: "user's profile !" });
 });
-router.post("/update", async (req, res) => {
-  const { body } = req;
-  const { id, user: update } = body;
-
-  var response = "";
-  var user = "";
-  const filter = { id };
-
-  try {
-    response = await listUsers.updateOne(filter, { $set: { role: update.role } });
-    console.log("Res", response);
-    res
-      .status(200)
-      .json({ user, res: response, message: "user updated !" });
-  } catch (error) {
-    console.error(error);
-  }
-
-});
-router.post("/delete", async (req, res) => {
-  const { body } = req;
-  const { id } = body;
-  var response = "";
-  const userFilter = { id };
-  const authFilter = { localId: id };
-
-  try {
-    const { acknowledged } = await listUsers.deleteOne(userFilter);
-    if (acknowledged) {
-      response = await User.deleteOne(authFilter);
-    }
-    res
-      .status(200)
-      .json({ res: response, message: "user updated !" });
-  } catch (error) {
-    console.error(error);
-  }
-
-});
 router.post("/create", async (req, res) => {
   const { body } = req;
   const { user: requestedUser, password: passwordHash, shopId } = body;
   const { firstname, lastname, role, status } = requestedUser;
   // const email = `${}@marieblachere.fr`;
-  const email = `yacinemathurin@gmail.com`;
+  const email = `${uuid()}@marieblachere.fr`;
   const userInfo = { firstname, lastname, role, email, passwordHash, shopId };
   const displayName = `${firstname} ${lastname}`;
   const emailVerified = false;
@@ -142,8 +103,8 @@ router.post("/create", async (req, res) => {
   var createdAt = "";
   const localId = uuid();
 
-  // const { error } = validateSignUp(userInfo);
-  // if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validateCreate(userInfo);
+  if (error) return res.status(400).send(error.details[0].message);
   let user = {};
   let auth = await User.findOne({ email });
   if (auth) return res.status(400).send("User already registred !");
@@ -175,6 +136,64 @@ router.post("/create", async (req, res) => {
   }
 
 });
+router.post("/update", async (req, res) => {
+  const { body } = req;
+  const { id, user: update } = body;
 
+  var response = "";
+  var user = "";
+  const filter = { id };
+
+  try {
+    response = await listUsers.updateOne(filter, { $set: { role: update.role } });
+    console.log("Res", response);
+    res
+      .status(200)
+      .json({ user, res: response, message: "user updated !" });
+  } catch (error) {
+    console.error(error);
+  }
+
+});
+router.post("/requestdelete", async (req, res) => {
+  const { body } = req;
+  const { id } = body;
+
+  var response = "";
+  const filter = { id };
+
+  try {
+    response = await listUsers.updateOne(filter, { $set: { status: "pendingDeletion" } });
+    console.log("Res", response);
+    res
+      .status(200)
+      .json({ res: response, message: "pending deletion set!" });
+  } catch (error) {
+    console.error(error);
+  }
+
+});
+
+router.post("/approuvedelete", async (req, res) => {
+  const { body } = req;
+  const { id } = body;
+  var response = "";
+  const userFilter = { id };
+  const authFilter = { localId: id };
+
+  try {
+    const { deletedCount } = await listUsers.deleteOne(userFilter);
+    if (deletedCount === 1) {
+      response = await User.deleteOne(authFilter);
+      console.log("Auth Response", response);
+    }
+    res
+      .status(200)
+      .json({ res: response, message: "user deleted !" });
+  } catch (error) {
+    console.error(error);
+  }
+
+});
 
 module.exports = router;

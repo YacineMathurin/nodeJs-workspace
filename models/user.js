@@ -60,6 +60,17 @@ function validateUser(user) {
   };
   return Joi.validate(user, schema);
 }
+function validateCreate(userInfo) {
+  const schema = {
+    email: Joi.string().required().min(5).max(255).email(),
+    firstname: Joi.string().required().min(3).max(50),
+    lastname: Joi.string().required().min(3).max(50),
+    role: Joi.string().required().min(3).max(50),
+    shopId: Joi.string().required().min(3).max(50),
+    passwordHash: Joi.string().required().min(5).max(255),
+  };
+  return Joi.validate(userInfo, schema);
+}
 function validateForgotPassword(reqBody) {
   const schema = {
     userId: Joi.string().required(),
@@ -69,5 +80,6 @@ function validateForgotPassword(reqBody) {
 }
 
 exports.User = User;
+exports.validateCreate = validateCreate;
 exports.validateSignUp = validateUser;
 exports.validateForgotPassword = validateForgotPassword;
