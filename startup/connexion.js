@@ -3,9 +3,9 @@ const winston = require("winston");
 const config = require("config");
 
 module.exports = function () {
-  if (!config.get("jwtPrivateKey")) {
-    console.log("FATAL ERROR: jwtPrivateKey not set !");
-    winston.error("FATAL ERROR: jwtPrivateKey not set !");
+  if (!config.get("jwtPrivateKey") || !config.get("apikey")) {
+    console.log("FATAL ERROR: jwtPrivateKey and/or apikey not set in config!");
+    winston.error("FATAL ERROR: jwtPrivateKey and/or apikey not set in config!");
     process.exit(1);
   }
   // Returns a promise
