@@ -1,13 +1,13 @@
 
 var SibApiV3Sdk = require('sib-api-v3-sdk');
-const myApiKey = config.get("apikey");
 
-if (!process.env.TRANSACTION_EMAIL_FROM || !process.env.CONFIRM_DELETE_USER_URL) {
-    console.error("FATAL ERROR: TRANSACTION_EMAIL_FROM and/or CONFIRM_DELETE_USER_URL not set in .env !");
-    winston.error("FATAL ERROR: TRANSACTION_EMAIL_FROM and/or CONFIRM_DELETE_USER_URL not set in .env !");
+if (!process.env.TRANSACTION_EMAIL_FROM || !process.env.CONFIRM_DELETE_USER_URL || !process.env.SENDINBLUE_API_KEY) {
+    console.error("FATAL ERROR: missing or misconfigured .env !");
+    winston.error("FATAL ERROR: missing or misconfigured .env !");
     process.exit(1);
 }
 
+const myApiKey = process.env.SENDINBLUE_API_KEY;
 const MAGICLINK_TEMPLATE = 6;
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];

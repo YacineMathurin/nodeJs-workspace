@@ -38,7 +38,7 @@ router.post("/isauthenticated", async (req, res) => {
     }
   }
   res.status(200).json({
-    user,
+    user, token
   });
 });
 router.post("/forgotpassword", async (req, res) => {
