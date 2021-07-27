@@ -12,5 +12,7 @@ Json web token assigned to each connected user to allow certain actions accordin
 ### Lauching the program
 you need to have Node.js installed, then step up to the directory of the project and type
 
-- node app.js
-- if you have nodemon installed, just type nodemon and the program will actualize accross saved changes
+```
+node app.js
+if you have nodemon installed, just type nodemon and the program will actualize accross saved changes
+```
