@@ -16,6 +16,6 @@ you need to have Node.js installed, then step up to the directory of the project
 
 node app.js
 or
-if you have nodemon installed, just type ** nodemon ** instead and the program will actualize accross saved changes
+if you have nodemon installed, just type nodemon instead and the program will actualize accross saved changes
 
 ```
