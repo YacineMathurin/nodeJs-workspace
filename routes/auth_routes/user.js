@@ -10,7 +10,7 @@ const { uuid } = require('uuidv4');
 const auth = require("../../middlewares/auth");
 const { validateForgotPassword, validateCreate, User } = require("../../models/user");
 const { listUsers } = require("../../models/listAllUsers");
-
+const emailingService = require("../../services/server/emailingService")
 
 
 router.post("/gettoken", auth, async (req, res) => {
@@ -64,8 +64,10 @@ router.post("/forgotpassword", async (req, res) => {
   res.status(200).json({ res: "", message: "Password edited !" });
 });
 router.post("/allShopUsers", async (req, res) => {
-  // const shopToken = req.header("x-shop-token");
-  //   var decoded = jwt_decode(shopToken);
+  const shopToken = req.header("x-shop-token");
+  console.log("shopToken", shopToken);
+  // const decoded = jwt.verify(shopToken,config.get("blackereKey"));
+  // const shopId = decoded.decoded;
   //   console.log('shopToken', shopToken);
   // console.log(decoded);
 
@@ -164,6 +166,7 @@ router.post("/requestdelete", async (req, res) => {
 
   try {
     response = await listUsers.updateOne(filter, { $set: { status: "pendingDeletion" } });
+    // emailingService()
     console.log("Res", response);
     res
       .status(200)
@@ -173,7 +176,6 @@ router.post("/requestdelete", async (req, res) => {
   }
 
 });
-
 router.post("/approuvedelete", async (req, res) => {
   const { body } = req;
   const { id } = body;
