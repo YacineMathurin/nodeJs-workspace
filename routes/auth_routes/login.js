@@ -1,4 +1,5 @@
 const { User } = require("../../models/user");
+const { listUsers } = require("../../models/listAllUsers");
 const { validateLogin } = require("../../models/signIn");
 const express = require("express");
 const router = express.Router();
@@ -6,6 +7,8 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const auth = require("../../middlewares/auth");
 const asyncMiddleware = require("../../middlewares/asyncMiddleware");
+const winston = require("winston");
+
 
 router.get("/me", auth, async (req, res) => {
   console.log(User.user);
@@ -28,8 +31,20 @@ router.post("/", async (req, res, next) => {
   // Check if already existing
   let user = await User.findOne({ email: email.toLowerCase() }).catch((err) => {
     console.log(err);
+    throw err;
   });
+  console.log("email", email.toLowerCase());
+  let agent = await listUsers.findOne({ email: email }).catch((err) => {
+    console.log(err);
+    throw err;
+  });
+  console.log("Agent", agent);
   if (!user) return res.status(400).send("Not registred !");
+  if (agent.status === "pendingDeletion") {
+    winston.error("User has no rights !");
+    throw "User has no rights";
+    return res.status(403).json({ message: "User has no rights" });
+  }
   console.log("All good !", user);
   //   Good to Signin check
   const isValidUser = await bcrypt.compare(req.body.password, user.passwordHash);

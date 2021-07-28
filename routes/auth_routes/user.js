@@ -10,7 +10,7 @@ const { uuid } = require('uuidv4');
 const auth = require("../../middlewares/auth");
 const { validateForgotPassword, validateCreate, User } = require("../../models/user");
 const { listUsers } = require("../../models/listAllUsers");
-const emailingService = require("../../services/server/emailingService")
+const { emailingService } = require("../../services/server/emailingService")
 
 
 router.post("/gettoken", auth, async (req, res) => {
@@ -171,6 +171,25 @@ router.post("/requestdelete", async (req, res) => {
     res
       .status(200)
       .json({ res: response, message: "pending deletion set!" });
+  } catch (error) {
+    console.error(error);
+  }
+
+});
+router.post("/cancelRequestdelete", async (req, res) => {
+  const { body } = req;
+  const { id } = body;
+
+  var response = "";
+  const filter = { id };
+
+  try {
+    response = await listUsers.updateOne(filter, { $set: { status: "active" } });
+    // emailingService()
+    console.log("Res", response);
+    res
+      .status(200)
+      .json({ res: response, message: "pending deletion unset!" });
   } catch (error) {
     console.error(error);
   }

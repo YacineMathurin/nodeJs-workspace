@@ -1,5 +1,5 @@
 
-export default function emailingService(to) {
+function emailingService(to) {
     var SibApiV3Sdk = require('sib-api-v3-sdk');
 
     if (!process.env.TRANSACTION_EMAIL_FROM || !process.env.CONFIRM_DELETE_USER_URL || !process.env.SENDINBLUE_API_KEY) {
@@ -35,3 +35,5 @@ export default function emailingService(to) {
             return data;
         });
 }
+
+exports.emailingService = emailingService;
