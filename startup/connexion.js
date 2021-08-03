@@ -19,13 +19,17 @@ module.exports = function () {
   mongoose
     .connect(
       // "mongodb+srv://admin:CloudData1@cluster0-pjomp.mongodb.net/test?retryWrites=true&w=majority"
-      "mongodb://localhost/blachere"
+      // "mongodb://localhost/blachere"
       // To connect to Containerized MongoDB, MONGO_IMAGE_IP and DB_NAME to 
       // be configured in .env file at the root of the project
-      // `mongodb://${process.env.MONGO_IMAGE_IP}:27017/${process.env.DB_NAME}`,
+      `mongodb://${process.env.MONGO_IMAGE_IP}:27017/${process.env.DB_NAME}`,
     )
     .then(() => {
-      console.log("Successfully Connected to database ...");
+      if (process.env.MONGO_IMAGE_IP && process.env.DB_NAME)
+        console.log("Mongoose Connected Successfully to mongo docker", process.env.MONGO_IMAGE_IP, process.env.DB_NAME)
+      else
+        console.log("Mongoose Connected Successfully")
       winston.info("Successfully Connected to database ...");
-    });
+    })
+    .catch((err) => console.error("Mongoose Connection failed"));
 };
