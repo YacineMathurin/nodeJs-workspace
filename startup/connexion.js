@@ -31,5 +31,5 @@ module.exports = function () {
         console.log("Mongoose Connected Successfully")
       winston.info("Successfully Connected to database ...");
     })
-    .catch((err) => console.error("Oups, Mongoose Connection failed !"));
+    .catch((err) => console.error("Oups, Mongoose Connection failed !", process.env.MONGO_IMAGE_IP, process.env.DB_NAME));
 };
