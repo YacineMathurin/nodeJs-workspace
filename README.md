@@ -1,6 +1,4 @@
 # nodeJs-workspace
-### Preview
-![](images/NodeJs.gif)
 
 ### Usage
 This is simple backend service unabling connexion to a server, mainly developped using Node.js, MongoDB and the Express framework.
